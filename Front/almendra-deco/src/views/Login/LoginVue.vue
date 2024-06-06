@@ -1,51 +1,86 @@
 <template>
-    <div class="login-container">
-      <h1>Bienvenido a Almendra Decoraciones</h1>
-      <div class="login-card">
-        <h2>Iniciar Sesión</h2>
-        <form @submit.prevent="handleLogin">
-          <div class="input-group">
-            <label for="username">Usuario</label>
-            <input type="text" id="username" v-model="username" required />
-          </div>
-          <div class="input-group">
-            <label for="password">Contraseña</label>
-            <input type="password" id="password" v-model="password" required />
-          </div>
-          <button type="submit">Iniciar Sesión</button>
-        </form>
-        <div class="links">
-          <a href="#" @click.prevent="handleRegister">Registrarse</a>
-          <br>
-          <a href="#" @click.prevent="handleRecoverPassword">Recuperar Contraseña</a>
+  <div class="login-container">
+    <h1>Bienvenido a Almendra Decoraciones</h1>
+    <div class="login-card">
+      <h2>Iniciar Sesión</h2>
+      <form @submit.prevent="handleLogin">
+        <div class="input-group">
+          <label for="username">Usuario</label>
+          <input type="text" id="username" v-model="username" required />
         </div>
+        <div class="input-group">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" v-model="password" required />
+          <div v-if="loginError" class="error-message">{{ loginErrorMessage }}</div>
+        </div>
+        <button type="submit">Iniciar Sesión</button>
+      </form>
+      <div class="links">
+        <a href="#" @click.prevent="handleRegister">Registrarse</a>
+        <br>
+        <a href="#" @click.prevent="handleRecoverPassword">Recuperar Contraseña</a>
       </div>
     </div>
-  </template>
-  
-  <script>
-  export default {
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+
+export default {
     data() {
-      return {
-        username: '',
-        password: ''
-      };
-    },
-    methods: {
-      handleLogin() {
-        // Lógica para iniciar sesión
-      },
-      handleRegister() {
-        // Lógica para registrarse
-      },
-      handleRecoverPassword() {
-        // Lógica para recuperar contraseña
+    return {
+      username: '',
+      password: '',
+      loginError: false,
+      loginErrorMessage: ''
+    };
+  },
+  methods: {
+    async handleLogin() {
+  try {
+    const response = await axios.post('http://localhost:5000/api/auth/login', {
+      email: this.username,
+      password: this.password
+    });
+    console.log(response.data);
+    if (response.data.access_token) {
+      // Redirige al usuario a la página de inicio después de iniciar sesión
+      window.location.href = '/home'; // Cambia '/home' por la ruta real de tu página de inicio
+    }
+  } catch (error) {
+    console.error(error);
+    if (error.response.status === 401) {
+      const message = error.response.data.error;
+      if (message === 'Invalid credentials') {
+        this.loginError = true;
+        this.loginErrorMessage = 'Usuario o contraseña incorrectos';
+      } else {
+        this.loginError = false; 
+        this.loginErrorMessage = '';
+        alert('Usuario no encontrado');
       }
     }
-  };
-  </script>
-  
-  <style scoped>
+  }
+},
+
+    handleRegister() {
+      // Lógica para registrarse
+    },
+    handleRecoverPassword() {
+      // Lógica para recuperar contraseña
+    }
+  }
+}
+</script>
+
+<style scoped>
+  .error-message {
+    color: red;
+    margin-top: 5px;
+    font-size: 0.8rem;
+  }
   .login-container {
     background-color: rgba(217, 217, 217, 1);
     display: flex;

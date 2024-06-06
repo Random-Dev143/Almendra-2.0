@@ -1,45 +1,51 @@
 <template>
-    <header>
-      <nav>
-        <div class="nav-container">
-          <font-awesome-icon 
-            icon="bars" 
-            class="menu-icon" 
-            @click="toggleMenu" 
-            v-if="!isMenuOpen && !isTransitioning"
-          />
-          <div class="links" :class="{ show: isMenuOpen, hide: !isMenuOpen && isTransitioning }" @transitionend="handleTransitionEnd">
-            <RouterLink class="link" to="/" @click="closeMenu">Home</RouterLink>
-            <RouterLink class="link" to="/login" @click="closeMenu">Login</RouterLink>
-            <RouterLink class="link" to="/about" @click="closeMenu">About</RouterLink>
-          </div>
+  <header>
+    <nav>
+      <div class="nav-container">
+        <font-awesome-icon 
+          icon="bars" 
+          class="menu-icon" 
+          @click="toggleMenu" 
+          v-if="!isMenuOpen && !isTransitioning"
+        />
+        <div class="links" :class="{ show: isMenuOpen, hide: !isMenuOpen && isTransitioning }" @transitionend="handleTransitionEnd">
+          <a class="link" href="/home">Home</a>
+          <a class="link" href="/login">Login</a>
+          <a class="link" href="/about">About</a>
         </div>
-      </nav>
-    </header>
-  </template>
-  
-  <script setup lang="ts">
-  import { ref } from 'vue';
-  
-  const isMenuOpen = ref(false);
-  const isTransitioning = ref(false);
-  
-  function toggleMenu() {
-    isMenuOpen.value = !isMenuOpen.value;
-    isTransitioning.value = true;
-  }
-  
-  function closeMenu() {
-    isMenuOpen.value = false;
-    isTransitioning.value = true;
-  }
-  
-  function handleTransitionEnd() {
-    if (!isMenuOpen.value) {
-      isTransitioning.value = false;
+      </div>
+    </nav>
+  </header>
+</template>
+
+<script>
+import { ref } from 'vue';
+
+export default {
+  name: 'NavBar',
+  data() {
+    return {
+      isMenuOpen: false,
+      isTransitioning: false
+    };
+  },
+  methods: {
+    toggleMenu() {
+      this.isMenuOpen = !this.isMenuOpen;
+      this.isTransitioning = true;
+    },
+    closeMenu() {
+      this.isMenuOpen = false;
+      this.isTransitioning = true;
+    },
+    handleTransitionEnd() {
+      if (!this.isMenuOpen) {
+        this.isTransitioning = false;
+      }
     }
   }
-  </script>
+};
+</script>
   
   <style scoped>
   header {
