@@ -43,7 +43,7 @@ def agregar_productos():
             stock=stock
         )
         db.session.add(nuevo_producto)
-        db.session.flush()  # Para obtener el ID del producto antes de hacer commit
+        db.session.flush()  
         
         imagenes = datos_producto.get('imagenes', [])
         for img in imagenes:
@@ -80,10 +80,10 @@ def eliminar_producto(id):
     if producto is None:
         return jsonify({"error": "Producto no encontrado"}), 404
     
-    # Eliminar imágenes asociadas
+    
     Imagen.query.filter_by(producto_id=id).delete()
     
-    # Eliminar el producto
+    
     db.session.delete(producto)
     db.session.commit()
     

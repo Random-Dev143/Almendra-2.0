@@ -11,7 +11,7 @@
         <div class="links" :class="{ show: isMenuOpen, hide: !isMenuOpen && isTransitioning }" @transitionend="handleTransitionEnd">
           <a class="link" href="/home">Home</a>
           <a class="link" href="/login">Login</a>
-          <a class="link" href="/about">About</a>
+          <a class="link" href="/productos">Productos</a>
         </div>
       </div>
     </nav>
